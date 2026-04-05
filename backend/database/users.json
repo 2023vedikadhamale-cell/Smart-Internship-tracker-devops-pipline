@@ -5,8 +5,10 @@
     "email": "rahul@example.com",
     "password": "pass123",
     "userType": "student",
-    "resume": "B.Tech Computer Science student with Java and Web Development skills",
+    "resume": "B.Tech Computer Science student with Java and Web Development skills. Proficient in Spring Boot, React, and MySQL.",
     "phone": "9876543210",
+    "skills": ["Java", "Spring Boot", "React", "MySQL"],
+    "college": "IIT Delhi",
     "createdAt": "2024-01-15"
   },
   {
@@ -15,8 +17,10 @@
     "email": "priya@example.com",
     "password": "pass123",
     "userType": "student",
-    "resume": "B.Tech IT student interested in Python and Data Science",
+    "resume": "B.Tech IT student interested in Python and Data Science. Experience with TensorFlow and Pandas.",
     "phone": "9876543211",
+    "skills": ["Python", "Data Science", "Machine Learning", "Pandas"],
+    "college": "NIT Trichy",
     "createdAt": "2024-01-16"
   },
   {
@@ -25,8 +29,10 @@
     "email": "amit@example.com",
     "password": "pass123",
     "userType": "student",
-    "resume": "B.Tech Electronics Engineering student with C++ and Embedded Systems knowledge",
+    "resume": "B.Tech Electronics Engineering student with C++ and Embedded Systems knowledge. Worked on IoT projects.",
     "phone": "9876543212",
+    "skills": ["C++", "Embedded Systems", "IoT", "Arduino"],
+    "college": "BITS Pilani",
     "createdAt": "2024-01-17"
   },
   {
@@ -37,6 +43,7 @@
     "userType": "recruiter",
     "companyName": "TechCorp Solutions",
     "companyWebsite": "www.techcorp.com",
+    "companyDescription": "Leading IT solutions provider specializing in enterprise software",
     "createdAt": "2024-01-10"
   },
   {
@@ -47,6 +54,7 @@
     "userType": "recruiter",
     "companyName": "StartupXYZ",
     "companyWebsite": "www.startupxyz.com",
+    "companyDescription": "Fast-growing startup focused on innovative web solutions",
     "createdAt": "2024-01-12"
   },
   {
@@ -55,10 +63,148 @@
     "email": "2023.shravani.bhosale@ves.ac.in",
     "password": "mai@hotikonhu1234",
     "userType": "student",
-    "resume": "",
+    "resume": "B.Tech student with interest in full-stack development",
     "phone": "",
-    "companyName": "",
-    "companyWebsite": "",
+    "skills": ["JavaScript", "React", "Node.js"],
+    "college": "VES Institute of Technology",
     "createdAt": "2026-04-05"
+  },
+  {
+    "id": 7,
+    "name": "Akash Sharma",
+    "email": "akash@example.com",
+    "password": "pass123",
+    "userType": "student",
+    "resume": "Final year Computer Science student passionate about backend development. Strong in Node.js and PostgreSQL.",
+    "phone": "9876543213",
+    "skills": ["Node.js", "PostgreSQL", "Express.js", "Docker"],
+    "college": "VIT Vellore",
+    "createdAt": "2024-01-18"
+  },
+  {
+    "id": 8,
+    "name": "Sneha Reddy",
+    "email": "sneha@example.com",
+    "password": "pass123",
+    "userType": "student",
+    "resume": "UI/UX Design student with experience in Figma and Adobe XD. Portfolio includes 10+ mobile app designs.",
+    "phone": "9876543214",
+    "skills": ["Figma", "Adobe XD", "UI/UX", "Prototyping"],
+    "college": "NIFT Mumbai",
+    "createdAt": "2024-01-19"
+  },
+  {
+    "id": 9,
+    "name": "Vikram Joshi",
+    "email": "vikram@example.com",
+    "password": "pass123",
+    "userType": "student",
+    "resume": "B.Tech student specializing in Cloud Computing and DevOps. AWS Certified Solutions Architect.",
+    "phone": "9876543215",
+    "skills": ["AWS", "DevOps", "Kubernetes", "Terraform"],
+    "college": "IIIT Hyderabad",
+    "createdAt": "2024-01-20"
+  },
+  {
+    "id": 10,
+    "name": "Ananya Gupta",
+    "email": "ananya@example.com",
+    "password": "pass123",
+    "userType": "student",
+    "resume": "B.Tech AI/ML student with research experience in NLP. Published paper on sentiment analysis.",
+    "phone": "9876543216",
+    "skills": ["Python", "NLP", "Deep Learning", "PyTorch"],
+    "college": "IIT Bombay",
+    "createdAt": "2024-01-21"
+  },
+  {
+    "id": 11,
+    "name": "Rohan Mehta",
+    "email": "rohan@example.com",
+    "password": "pass123",
+    "userType": "student",
+    "resume": "Mobile App Developer with expertise in Flutter and React Native. Built 5+ apps on Play Store.",
+    "phone": "9876543217",
+    "skills": ["Flutter", "React Native", "Dart", "Firebase"],
+    "college": "SRM University",
+    "createdAt": "2024-01-22"
+  },
+  {
+    "id": 12,
+    "name": "Kavya Nair",
+    "email": "kavya@example.com",
+    "password": "pass123",
+    "userType": "student",
+    "resume": "Cybersecurity enthusiast with CEH certification. Participated in multiple CTF competitions.",
+    "phone": "9876543218",
+    "skills": ["Cybersecurity", "Penetration Testing", "Network Security", "Python"],
+    "college": "Amity University",
+    "createdAt": "2024-01-23"
+  },
+  {
+    "id": 13,
+    "name": "Infosys Hiring Team",
+    "email": "careers@infosys.com",
+    "password": "pass123",
+    "userType": "recruiter",
+    "companyName": "Infosys",
+    "companyWebsite": "www.infosys.com",
+    "companyDescription": "Global leader in next-generation digital services and consulting",
+    "createdAt": "2024-01-14"
+  },
+  {
+    "id": 14,
+    "name": "Flipkart Talent",
+    "email": "jobs@flipkart.com",
+    "password": "pass123",
+    "userType": "recruiter",
+    "companyName": "Flipkart",
+    "companyWebsite": "www.flipkart.com",
+    "companyDescription": "India's leading e-commerce marketplace",
+    "createdAt": "2024-01-13"
+  },
+  {
+    "id": 15,
+    "name": "Google India HR",
+    "email": "recruit@google.com",
+    "password": "pass123",
+    "userType": "recruiter",
+    "companyName": "Google India",
+    "companyWebsite": "careers.google.com",
+    "companyDescription": "Organizing the world's information and making it universally accessible",
+    "createdAt": "2024-01-08"
+  },
+  {
+    "id": 16,
+    "name": "Microsoft Careers",
+    "email": "hiring@microsoft.com",
+    "password": "pass123",
+    "userType": "recruiter",
+    "companyName": "Microsoft India",
+    "companyWebsite": "careers.microsoft.com",
+    "companyDescription": "Empowering every person and organization on the planet to achieve more",
+    "createdAt": "2024-01-09"
+  },
+  {
+    "id": 17,
+    "name": "Zomato HR",
+    "email": "talent@zomato.com",
+    "password": "pass123",
+    "userType": "recruiter",
+    "companyName": "Zomato",
+    "companyWebsite": "www.zomato.com",
+    "companyDescription": "Better food for more people",
+    "createdAt": "2024-01-11"
+  },
+  {
+    "id": 18,
+    "name": "Paytm Recruitment",
+    "email": "jobs@paytm.com",
+    "password": "pass123",
+    "userType": "recruiter",
+    "companyName": "Paytm",
+    "companyWebsite": "www.paytm.com",
+    "companyDescription": "India's leading digital payments and financial services company",
+    "createdAt": "2024-01-07"
   }
 ]

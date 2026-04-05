@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Jobs - Smart Internship & Job Tracker</title>
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <title>Browse Jobs - CareerTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.0">
     <link rel="stylesheet" href="chatbot.css">
 </head>
 <body>
@@ -13,33 +16,83 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <span class="logo-icon">📊</span>
+                    <div class="logo-icon">CT</div>
                     <span class="logo-text">CareerTrack</span>
                 </div>
             </div>
 
             <nav class="sidebar-nav">
                 <a href="index.html" class="nav-link" data-page="dashboard">
-                    <span class="nav-icon">📈</span>
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </span>
                     <span>Dashboard</span>
                 </a>
+                <a href="applications.html" class="nav-link" data-page="applications">
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                    </span>
+                    <span>My Applications</span>
+                </a>
                 <a href="browse-jobs.html" class="nav-link active" data-page="browse-jobs">
-                    <span class="nav-icon">🔍</span>
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
                     <span>Browse Jobs</span>
                 </a>
                 <a href="add.html" class="nav-link" data-page="add">
-                    <span class="nav-icon">➕</span>
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </span>
                     <span>Add Application</span>
                 </a>
                 <a href="profile.html" class="nav-link" data-page="profile">
-                    <span class="nav-icon">👤</span>
-                    <span>Profile</span>
+                    <span class="nav-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </span>
+                    <span>My Profile</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <button class="logout-btn">
-                    <span class="nav-icon">🚪</span>
+                <div class="theme-toggle-wrapper">
+                    <span class="theme-toggle-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        Dark Mode
+                    </span>
+                    <label class="theme-toggle">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <span class="theme-toggle-slider"></span>
+                    </label>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
                     <span>Logout</span>
                 </button>
             </div>
@@ -51,26 +104,61 @@
                 <div class="header">
                     <div class="header-title">
                         <h1>Browse Jobs</h1>
-                        <p class="header-subtitle">Find and apply to internship opportunities</p>
+                        <p class="header-subtitle">Find and apply to opportunities that match your skills</p>
                     </div>
+                    <div class="header-action">
+                        <button class="btn btn-primary" onclick="openResumeAnalysis()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <path d="M14 2v6h6"></path>
+                                <circle cx="12" cy="15" r="3"></circle>
+                            </svg>
+                            AI Resume Analysis
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Recommendations Section -->
+                <div id="ai-recommendations" class="ai-section hidden">
+                    <div class="ai-section-header">
+                        <div class="ai-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="ai-section-title">AI-Powered Job Recommendations</div>
+                            <div class="ai-section-subtitle">Based on your resume skills and experience</div>
+                        </div>
+                    </div>
+                    <div id="ai-match-results"></div>
                 </div>
 
                 <!-- Search & Filter Section -->
                 <section class="jobs-filter-section">
-                    <input type="text" id="job-search" class="search-box" placeholder="Search jobs by company, role, or location...">
-                    <select id="company-filter" class="filter-select">
+                    <input type="text" id="job-search" class="search-box form-input" placeholder="Search by job title, company, or skills...">
+                    <select id="company-filter" class="filter-select form-select">
                         <option value="">All Companies</option>
+                    </select>
+                    <select id="location-filter" class="filter-select form-select">
+                        <option value="">All Locations</option>
                     </select>
                 </section>
 
                 <!-- Jobs Listing -->
                 <section class="jobs-listing-section">
                     <div id="jobs-container" class="jobs-container">
-                        <!-- Job cards will be loaded here -->
                         <div class="empty-state">
-                            <div class="empty-icon">💼</div>
+                            <div class="empty-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                            </div>
                             <h3>No jobs available</h3>
-                            <p>Check back later for new opportunities!</p>
+                            <p>Check back later for new opportunities</p>
                         </div>
                     </div>
                 </section>
@@ -80,56 +168,658 @@
 
     <!-- Job Detail Modal -->
     <div id="job-detail-modal" class="modal hidden">
-        <div class="modal-content">
+        <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2 id="modal-job-title"></h2>
-                <button class="modal-close" id="close-job-detail">&times;</button>
+                <h2 id="modal-job-title">Job Details</h2>
+                <button class="modal-close" onclick="closeJobDetailModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="job-detail-section">
-                    <h3>Job Details</h3>
+                <div class="job-detail-grid">
                     <div class="detail-row">
-                        <span class="detail-label">Company:</span>
+                        <span class="detail-label">Company</span>
                         <span id="modal-company" class="detail-value"></span>
                     </div>
                     <div class="detail-row">
-                        <span class="detail-label">Location:</span>
+                        <span class="detail-label">Location</span>
                         <span id="modal-location" class="detail-value"></span>
                     </div>
                     <div class="detail-row">
-                        <span class="detail-label">Salary:</span>
+                        <span class="detail-label">Salary/Stipend</span>
                         <span id="modal-salary" class="detail-value"></span>
                     </div>
                     <div class="detail-row">
-                        <span class="detail-label">Posted Date:</span>
+                        <span class="detail-label">Posted</span>
                         <span id="modal-posted-date" class="detail-value"></span>
                     </div>
                 </div>
 
-                <div class="job-detail-section">
-                    <h3>Description</h3>
-                    <p id="modal-description"></p>
+                <div class="mt-4">
+                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Required Skills</h4>
+                    <div id="modal-skills" class="job-skills"></div>
+                </div>
+
+                <div class="mt-4">
+                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Description</h4>
+                    <p id="modal-description" style="color: var(--text-secondary); line-height: 1.6;"></p>
+                </div>
+
+                <div id="modal-match-section" class="ai-match-score hidden">
+                    <div>
+                        <span class="match-percentage" id="modal-match-percentage">0%</span>
+                        <span class="match-label">Match Score</span>
+                    </div>
+                    <div class="match-details" id="modal-matching-skills"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="close-job-detail-btn">Close</button>
-                <button type="button" class="btn btn-primary" id="apply-job-btn">Apply Now</button>
+                <button type="button" class="btn btn-secondary" onclick="closeJobDetailModal()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="openApplicationForm()">Apply Now</button>
             </div>
         </div>
     </div>
 
+    <!-- Application Form Modal -->
+    <div id="application-modal" class="modal hidden">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Submit Application</h2>
+                <button class="modal-close" onclick="closeApplicationModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="application-form" onsubmit="submitApplication(event)">
+                    <input type="hidden" id="apply-job-id">
+                    <input type="hidden" id="apply-job-title">
+                    <input type="hidden" id="apply-job-company">
+
+                    <!-- Job Summary -->
+                    <div class="card mb-4" style="background: var(--primary-subtle); border-color: var(--primary-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary);" id="apply-summary-title"></div>
+                                <div style="color: var(--text-secondary); font-size: 13px;" id="apply-summary-company"></div>
+                            </div>
+                            <span class="badge badge-applied">Applying</span>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary);">Personal Information</h4>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name <span class="required">*</span></label>
+                            <input type="text" id="apply-name" class="form-input" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email <span class="required">*</span></label>
+                            <input type="email" id="apply-email" class="form-input" required readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="apply-phone" class="form-input" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn Profile</label>
+                            <input type="url" id="apply-linkedin" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Portfolio/Website</label>
+                        <input type="url" id="apply-portfolio" class="form-input" placeholder="https://yourportfolio.com">
+                    </div>
+
+                    <!-- Resume Upload -->
+                    <h4 style="font-size: 14px; font-weight: 600; margin: 24px 0 16px; color: var(--text-secondary);">Resume</h4>
+
+                    <div class="form-group">
+                        <div class="file-upload" id="resume-upload-area" onclick="document.getElementById('resume-file').click()">
+                            <div class="file-upload-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="file-upload-title">Click to upload or drag and drop</div>
+                            <div class="file-upload-hint">PDF, DOC, DOCX (Max 5MB)</div>
+                            <input type="file" id="resume-file" accept=".pdf,.doc,.docx" onchange="handleResumeUpload(event)">
+                        </div>
+                        <div id="resume-preview" class="file-preview hidden">
+                            <span class="file-preview-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </span>
+                            <span id="resume-filename" class="file-preview-name"></span>
+                            <button type="button" class="file-preview-remove" onclick="removeResume(event)">&times;</button>
+                        </div>
+                        <p class="form-hint">Upload your latest resume for the recruiter to review</p>
+                    </div>
+
+                    <!-- Cover Letter -->
+                    <h4 style="font-size: 14px; font-weight: 600; margin: 24px 0 16px; color: var(--text-secondary);">Cover Letter</h4>
+
+                    <div class="form-group">
+                        <label class="form-label">Why are you interested in this role? <span class="required">*</span></label>
+                        <textarea id="apply-cover-letter" class="form-textarea form-input" rows="5"
+                            placeholder="Tell us why you're excited about this opportunity and what makes you a great fit..." required></textarea>
+                        <p class="form-hint">Minimum 50 characters</p>
+                    </div>
+
+                    <!-- Experience -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Years of Experience</label>
+                            <select id="apply-experience" class="form-select form-input">
+                                <option value="0">Fresher (0 years)</option>
+                                <option value="1">0-1 years</option>
+                                <option value="2">1-2 years</option>
+                                <option value="3">2-3 years</option>
+                                <option value="5">3-5 years</option>
+                                <option value="10">5+ years</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expected Salary/Stipend</label>
+                            <input type="text" id="apply-expected-salary" class="form-input" placeholder="e.g., 25,000/month">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Availability</label>
+                        <select id="apply-availability" class="form-select form-input">
+                            <option value="immediate">Immediate</option>
+                            <option value="1week">Within 1 week</option>
+                            <option value="2weeks">Within 2 weeks</option>
+                            <option value="1month">Within 1 month</option>
+                            <option value="negotiable">Negotiable</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Additional Information</label>
+                        <textarea id="apply-additional" class="form-textarea form-input" rows="3"
+                            placeholder="Any additional information you'd like to share..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeApplicationModal()">Cancel</button>
+                <button type="submit" form="application-form" class="btn btn-primary">Submit Application</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resume Analysis Modal -->
+    <div id="resume-analysis-modal" class="modal hidden">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>AI Resume Analysis</h2>
+                <button class="modal-close" onclick="closeResumeAnalysisModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="resume-analysis-upload" class="text-center">
+                    <div class="ai-icon mx-auto mb-4" style="width: 64px; height: 64px; font-size: 28px; margin: 0 auto 20px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <path d="M14 2v6h6"></path>
+                            <circle cx="12" cy="15" r="3"></circle>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Your Resume</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px;">Our AI will analyze your resume and match you with the best opportunities</p>
+
+                    <div class="file-upload" id="analysis-upload-area" onclick="document.getElementById('analysis-resume-file').click()">
+                        <div class="file-upload-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div class="file-upload-title">Click to upload resume</div>
+                        <div class="file-upload-hint">PDF, DOC, DOCX (Max 5MB)</div>
+                        <input type="file" id="analysis-resume-file" accept=".pdf,.doc,.docx" onchange="analyzeResume(event)">
+                    </div>
+                </div>
+
+                <div id="resume-analysis-loading" class="text-center hidden">
+                    <div class="ai-icon mx-auto mb-4" style="width: 64px; height: 64px; font-size: 28px; margin: 0 auto 20px; animation: pulse 1.5s infinite;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Analyzing Your Resume</h3>
+                    <p style="color: var(--text-secondary);">Extracting skills and matching with opportunities...</p>
+                </div>
+
+                <div id="resume-analysis-results" class="hidden">
+                    <div class="card mb-4" style="background: var(--success-light); border-color: var(--success-color);">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <div>
+                                <div style="font-weight: 600; color: var(--success-color);">Analysis Complete</div>
+                                <div style="color: var(--text-secondary); font-size: 13px;">Found <span id="skills-count">0</span> skills from your resume</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">Extracted Skills</h4>
+                    <div id="extracted-skills" class="job-skills mb-4"></div>
+
+                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">Recommended Jobs</h4>
+                    <div id="recommended-jobs" class="applications-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeResumeAnalysisModal()">Close</button>
+                <button type="button" class="btn btn-primary hidden" id="view-all-matches-btn" onclick="viewAllMatches()">View All Matches</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
     <script src="script.js"></script>
     <script src="chatbot.js"></script>
     <script>
-        // Initialize browse jobs page
+        let currentJobData = null;
+        let userResumeSkills = [];
+
         document.addEventListener('DOMContentLoaded', function() {
             if (!checkAuthAndRole()) return;
             if (!checkRoleAccess()) return;
-            
+
+            initTheme();
             setupDynamicSidebar();
             displayUserRole();
             initializeBrowseJobsPage();
+            loadSavedResumeSkills();
         });
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const checkbox = document.getElementById('theme-toggle-checkbox');
+            if (checkbox) {
+                checkbox.checked = savedTheme === 'dark';
+                checkbox.addEventListener('change', function() {
+                    const theme = this.checked ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem('theme', theme);
+                });
+            }
+        }
+
+        function loadSavedResumeSkills() {
+            const saved = localStorage.getItem('userResumeSkills');
+            if (saved) {
+                userResumeSkills = JSON.parse(saved);
+                if (userResumeSkills.length > 0) {
+                    document.getElementById('ai-recommendations').classList.remove('hidden');
+                    displayAIRecommendations();
+                }
+            }
+        }
+
+        function openJobDetailModal(job) {
+            currentJobData = job;
+
+            document.getElementById('modal-job-title').textContent = job.title || job.jobRole;
+            document.getElementById('modal-company').textContent = job.company;
+            document.getElementById('modal-location').textContent = job.location || 'Remote';
+            document.getElementById('modal-salary').textContent = job.stipend || job.salary || 'Competitive';
+            document.getElementById('modal-posted-date').textContent = job.postedDate || 'Recently';
+            document.getElementById('modal-description').textContent = job.description || 'No description available.';
+
+            // Display skills
+            const skillsContainer = document.getElementById('modal-skills');
+            const skills = job.skills || [];
+            skillsContainer.innerHTML = skills.map(skill =>
+                `<span class="skill-tag">${skill}</span>`
+            ).join('') || '<span class="text-muted">No skills specified</span>';
+
+            // Show match score if user has uploaded resume
+            const matchSection = document.getElementById('modal-match-section');
+            if (userResumeSkills.length > 0 && skills.length > 0) {
+                const matchResult = calculateMatchScore(userResumeSkills, skills);
+                document.getElementById('modal-match-percentage').textContent = matchResult.score + '%';
+                document.getElementById('modal-matching-skills').innerHTML = matchResult.matchingSkills
+                    .map(skill => `<span class="match-skill">${skill}</span>`).join('');
+                matchSection.classList.remove('hidden');
+            } else {
+                matchSection.classList.add('hidden');
+            }
+
+            document.getElementById('job-detail-modal').classList.remove('hidden');
+        }
+
+        function closeJobDetailModal() {
+            document.getElementById('job-detail-modal').classList.add('hidden');
+            currentJobData = null;
+        }
+
+        function openApplicationForm() {
+            if (!currentJobData) return;
+
+            const user = getUserObject();
+
+            document.getElementById('apply-job-id').value = currentJobData.id;
+            document.getElementById('apply-job-title').value = currentJobData.title || currentJobData.jobRole;
+            document.getElementById('apply-job-company').value = currentJobData.company;
+            document.getElementById('apply-summary-title').textContent = currentJobData.title || currentJobData.jobRole;
+            document.getElementById('apply-summary-company').textContent = currentJobData.company;
+            document.getElementById('apply-name').value = user.name || '';
+            document.getElementById('apply-email').value = user.email || '';
+
+            // Pre-fill from saved profile data
+            const phone = localStorage.getItem('userPhone');
+            const linkedin = localStorage.getItem('userLinkedin');
+            const portfolio = localStorage.getItem('userPortfolio');
+
+            if (phone) document.getElementById('apply-phone').value = phone;
+            if (linkedin) document.getElementById('apply-linkedin').value = linkedin;
+            if (portfolio) document.getElementById('apply-portfolio').value = portfolio;
+
+            closeJobDetailModal();
+            document.getElementById('application-modal').classList.remove('hidden');
+        }
+
+        function closeApplicationModal() {
+            document.getElementById('application-modal').classList.add('hidden');
+            document.getElementById('application-form').reset();
+            document.getElementById('resume-preview').classList.add('hidden');
+            document.getElementById('resume-upload-area').classList.remove('hidden');
+        }
+
+        function handleResumeUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('File size must be less than 5MB', 'error');
+                    return;
+                }
+
+                document.getElementById('resume-filename').textContent = file.name;
+                document.getElementById('resume-preview').classList.remove('hidden');
+                document.getElementById('resume-upload-area').style.display = 'none';
+
+                // Extract skills from resume (simulated)
+                extractSkillsFromResume(file);
+            }
+        }
+
+        function removeResume(event) {
+            event.stopPropagation();
+            document.getElementById('resume-file').value = '';
+            document.getElementById('resume-preview').classList.add('hidden');
+            document.getElementById('resume-upload-area').style.display = '';
+        }
+
+        function submitApplication(event) {
+            event.preventDefault();
+
+            const coverLetter = document.getElementById('apply-cover-letter').value;
+            if (coverLetter.length < 50) {
+                showToast('Cover letter must be at least 50 characters', 'error');
+                return;
+            }
+
+            const user = getUserObject();
+            const application = {
+                jobId: document.getElementById('apply-job-id').value,
+                jobRole: document.getElementById('apply-job-title').value,
+                company: document.getElementById('apply-job-company').value,
+                candidateName: user.name,
+                candidateEmail: user.email,
+                phone: document.getElementById('apply-phone').value,
+                linkedin: document.getElementById('apply-linkedin').value,
+                portfolio: document.getElementById('apply-portfolio').value,
+                coverLetter: coverLetter,
+                experience: document.getElementById('apply-experience').value,
+                expectedSalary: document.getElementById('apply-expected-salary').value,
+                availability: document.getElementById('apply-availability').value,
+                additionalInfo: document.getElementById('apply-additional').value,
+                hasResume: document.getElementById('resume-file').files.length > 0,
+                status: 'Applied',
+                appliedDate: new Date().toISOString()
+            };
+
+            // Save phone, linkedin, portfolio for future use
+            localStorage.setItem('userPhone', application.phone);
+            if (application.linkedin) localStorage.setItem('userLinkedin', application.linkedin);
+            if (application.portfolio) localStorage.setItem('userPortfolio', application.portfolio);
+
+            // Add application using existing function
+            addApplication(application);
+
+            showToast('Application submitted successfully!', 'success');
+            closeApplicationModal();
+        }
+
+        function openResumeAnalysis() {
+            document.getElementById('resume-analysis-upload').classList.remove('hidden');
+            document.getElementById('resume-analysis-loading').classList.add('hidden');
+            document.getElementById('resume-analysis-results').classList.add('hidden');
+            document.getElementById('view-all-matches-btn').classList.add('hidden');
+            document.getElementById('resume-analysis-modal').classList.remove('hidden');
+        }
+
+        function closeResumeAnalysisModal() {
+            document.getElementById('resume-analysis-modal').classList.add('hidden');
+        }
+
+        function analyzeResume(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Show loading
+            document.getElementById('resume-analysis-upload').classList.add('hidden');
+            document.getElementById('resume-analysis-loading').classList.remove('hidden');
+
+            // Simulate AI analysis
+            setTimeout(() => {
+                // Extract skills (simulated based on common skills)
+                const extractedSkills = extractSkillsFromFile(file.name);
+                userResumeSkills = extractedSkills;
+                localStorage.setItem('userResumeSkills', JSON.stringify(extractedSkills));
+
+                // Show results
+                document.getElementById('resume-analysis-loading').classList.add('hidden');
+                document.getElementById('resume-analysis-results').classList.remove('hidden');
+                document.getElementById('view-all-matches-btn').classList.remove('hidden');
+
+                // Display extracted skills
+                document.getElementById('skills-count').textContent = extractedSkills.length;
+                document.getElementById('extracted-skills').innerHTML = extractedSkills
+                    .map(skill => `<span class="skill-tag">${skill}</span>`).join('');
+
+                // Display recommended jobs
+                displayRecommendedJobs(extractedSkills);
+
+                // Show AI recommendations section
+                document.getElementById('ai-recommendations').classList.remove('hidden');
+                displayAIRecommendations();
+            }, 2000);
+        }
+
+        function extractSkillsFromFile(filename) {
+            // Simulated skill extraction - in real app, this would use AI/NLP
+            const allSkills = [
+                'JavaScript', 'Python', 'Java', 'React', 'Node.js', 'Angular', 'Vue.js',
+                'HTML', 'CSS', 'SQL', 'MongoDB', 'Git', 'AWS', 'Docker', 'Kubernetes',
+                'Machine Learning', 'Data Analysis', 'Excel', 'Power BI', 'Tableau',
+                'Communication', 'Leadership', 'Problem Solving', 'Teamwork',
+                'TypeScript', 'Redux', 'REST API', 'GraphQL', 'PostgreSQL', 'Redis',
+                'CI/CD', 'Agile', 'Scrum', 'Figma', 'Adobe XD', 'UI/UX Design'
+            ];
+
+            // Randomly select 8-15 skills to simulate extraction
+            const numSkills = Math.floor(Math.random() * 8) + 8;
+            const shuffled = allSkills.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, numSkills);
+        }
+
+        function extractSkillsFromResume(file) {
+            // This would be replaced with actual PDF parsing
+            const skills = extractSkillsFromFile(file.name);
+            userResumeSkills = skills;
+            localStorage.setItem('userResumeSkills', JSON.stringify(skills));
+        }
+
+        function calculateMatchScore(userSkills, jobSkills) {
+            const userSkillsLower = userSkills.map(s => s.toLowerCase());
+            const jobSkillsLower = jobSkills.map(s => s.toLowerCase());
+
+            const matchingSkills = jobSkills.filter(skill =>
+                userSkillsLower.includes(skill.toLowerCase())
+            );
+
+            const score = Math.round((matchingSkills.length / jobSkills.length) * 100);
+            return { score, matchingSkills };
+        }
+
+        function displayRecommendedJobs(skills) {
+            const jobs = JSON.parse(localStorage.getItem('jobs')) || [];
+
+            // Calculate match scores for all jobs
+            const jobsWithScores = jobs.map(job => {
+                const jobSkills = job.skills || [];
+                const match = calculateMatchScore(skills, jobSkills);
+                return { ...job, matchScore: match.score, matchingSkills: match.matchingSkills };
+            }).sort((a, b) => b.matchScore - a.matchScore);
+
+            const topJobs = jobsWithScores.slice(0, 3);
+            const container = document.getElementById('recommended-jobs');
+
+            if (topJobs.length === 0) {
+                container.innerHTML = '<p class="text-muted">No matching jobs found</p>';
+                return;
+            }
+
+            container.innerHTML = topJobs.map(job => `
+                <div class="app-card" onclick="openJobDetailModal(${JSON.stringify(job).replace(/"/g, '&quot;')})">
+                    <div class="app-card-content">
+                        <div class="app-header">
+                            <div class="app-title">${job.title || job.jobRole}</div>
+                            <div class="app-role">${job.company}</div>
+                        </div>
+                        <div class="app-meta">
+                            <span style="color: var(--success-color); font-weight: 600;">${job.matchScore}% Match</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-offer">${job.matchScore}%</span>
+                </div>
+            `).join('');
+        }
+
+        function displayAIRecommendations() {
+            const jobs = JSON.parse(localStorage.getItem('jobs')) || [];
+
+            const jobsWithScores = jobs.map(job => {
+                const jobSkills = job.skills || [];
+                const match = calculateMatchScore(userResumeSkills, jobSkills);
+                return { ...job, matchScore: match.score, matchingSkills: match.matchingSkills };
+            }).filter(job => job.matchScore >= 30)
+              .sort((a, b) => b.matchScore - a.matchScore);
+
+            const container = document.getElementById('ai-match-results');
+
+            if (jobsWithScores.length === 0) {
+                container.innerHTML = '<p class="text-muted">No matching jobs found. Try uploading a different resume.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="ai-match-score">
+                    <div>
+                        <span class="match-percentage">${jobsWithScores.length}</span>
+                        <span class="match-label">Jobs Match Your Profile</span>
+                    </div>
+                </div>
+                <div class="jobs-container mt-4" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                    ${jobsWithScores.slice(0, 3).map(job => `
+                        <div class="job-card-browse" onclick='openJobDetailModal(${JSON.stringify(job).replace(/'/g, "\\'")})'
+                            style="cursor: pointer;">
+                            <div class="job-card-header">
+                                <h3>${job.title || job.jobRole}</h3>
+                                <span class="badge badge-offer">${job.matchScore}%</span>
+                            </div>
+                            <div class="job-meta">
+                                <div class="job-meta-item">${job.company}</div>
+                            </div>
+                            <div class="match-details">
+                                ${job.matchingSkills.slice(0, 3).map(s => `<span class="match-skill">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function viewAllMatches() {
+            closeResumeAnalysisModal();
+            // Scroll to jobs section and apply AI filter
+            document.querySelector('.jobs-listing-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const icon = type === 'success' ?
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' :
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--danger-color)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('user');
+            localStorage.removeItem('role');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'login.html';
+        }
     </script>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .job-detail-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </body>
 </html>

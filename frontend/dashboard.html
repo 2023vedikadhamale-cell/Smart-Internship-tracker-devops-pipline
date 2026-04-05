@@ -521,8 +521,146 @@
     }
 
     // View applications (recruiter view)
-    function viewApplications() {
-      alert('This would show all applications for your posted jobs.');
+    async function viewApplications() {
+      try {
+        // Change the section title to Applications
+        document.getElementById('sectionTitle').textContent = 'All Job Applications';
+
+        // Get all applications from localStorage
+        const allApplications = JSON.parse(localStorage.getItem('applications') || '[]');
+
+        // For recruiters, show ALL applications (they can see applications for all jobs)
+        // In a real app, you'd filter by recruiter's posted jobs, but for demo purposes showing all
+        const contentArea = document.getElementById('contentArea');
+
+        if (allApplications && allApplications.length > 0) {
+          contentArea.innerHTML = allApplications
+            .map((app) => `
+              <div class="job-card" style="border-left: 4px solid #667eea;">
+                <h3>Application #${app.id}</h3>
+                <div class="details" style="margin-bottom: 15px;">
+                  <span><strong>Candidate:</strong> ${app.candidateName || 'N/A'}</span>
+                  <span><strong>Email:</strong> ${app.candidateEmail || 'N/A'}</span>
+                  <span><strong>Job Role:</strong> ${app.jobRole}</span>
+                  <span><strong>Company:</strong> ${app.companyName}</span>
+                </div>
+                <div class="details">
+                  <span><strong>Location:</strong> ${app.location}</span>
+                  <span><strong>Applied:</strong> ${app.applicationDate}</span>
+                  <span><strong>Status:</strong> <span style="color: ${getStatusColor(app.status)}">${(app.status || 'Applied').toUpperCase()}</span></span>
+                </div>
+                ${app.notes ? `<p style="margin-top: 10px; color: #666;"><strong>Notes:</strong> ${app.notes}</p>` : ''}
+                <div class="job-actions" style="margin-top: 15px;">
+                  <select
+                    class="btn"
+                    style="flex: 1; padding: 10px; color: #333; background: white; border: 1px solid #ddd;"
+                    onchange="updateApplicationStatus('${app.id}', this.value)"
+                  >
+                    <option value="">Update Status</option>
+                    <option value="Applied" ${app.status === 'Applied' ? 'selected' : ''}>Applied</option>
+                    <option value="Interview" ${app.status === 'Interview' ? 'selected' : ''}>Interview</option>
+                    <option value="Offer" ${app.status === 'Offer' ? 'selected' : ''}>Offer</option>
+                    <option value="Rejected" ${app.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                  </select>
+                  <button
+                    class="btn btn-secondary"
+                    style="margin-left: 10px;"
+                    onclick="viewCandidateDetails('${app.id}')"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            `)
+            .join('');
+        } else {
+          contentArea.innerHTML = `
+            <div class="empty-state">
+              <p>No applications have been submitted yet.</p>
+              <p style="margin-top: 10px; font-size: 0.9em; color: #999;">
+                Applications will appear here when students apply for jobs.
+              </p>
+            </div>
+          `;
+        }
+
+        // Add back button to return to main dashboard
+        contentArea.innerHTML += `
+          <div style="text-align: center; margin-top: 30px;">
+            <button
+              class="btn btn-secondary"
+              onclick="location.reload()"
+              style="padding: 12px 24px;"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+        `;
+
+      } catch (error) {
+        console.error('Error loading applications:', error);
+        document.getElementById('contentArea').innerHTML =
+          '<div class="empty-state"><p>Error loading applications. Please try again.</p></div>';
+      }
+    }
+
+    // Update application status for recruiters
+    function updateApplicationStatus(appId, newStatus) {
+      if (!newStatus) return;
+
+      try {
+        // Get all applications
+        const allApplications = JSON.parse(localStorage.getItem('applications') || '[]');
+
+        // Find and update the specific application
+        const updatedApplications = allApplications.map(app => {
+          if (app.id === appId) {
+            return { ...app, status: newStatus };
+          }
+          return app;
+        });
+
+        // Save back to localStorage
+        localStorage.setItem('applications', JSON.stringify(updatedApplications));
+
+        // Show success message and refresh the view
+        alert(`Application status updated to: ${newStatus}`);
+        viewApplications(); // Refresh the view
+
+      } catch (error) {
+        console.error('Error updating application status:', error);
+        alert('Failed to update application status');
+      }
+    }
+
+    // View candidate details
+    function viewCandidateDetails(appId) {
+      try {
+        const allApplications = JSON.parse(localStorage.getItem('applications') || '[]');
+        const application = allApplications.find(app => app.id === appId);
+
+        if (application) {
+          const details = `
+CANDIDATE DETAILS:
+
+Name: ${application.candidateName || 'N/A'}
+Email: ${application.candidateEmail || 'N/A'}
+Applied for: ${application.jobRole} at ${application.companyName}
+Location: ${application.location}
+Application Date: ${application.applicationDate}
+Current Status: ${application.status || 'Applied'}
+
+${application.notes ? 'Notes: ' + application.notes : 'No additional notes provided.'}
+          `;
+
+          alert(details);
+        } else {
+          alert('Application details not found.');
+        }
+      } catch (error) {
+        console.error('Error viewing candidate details:', error);
+        alert('Error loading candidate details');
+      }
     }
 
     // Logout function

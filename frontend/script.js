@@ -21,11 +21,11 @@ function checkRoleAccess(requiredRole) {
     const userRole = localStorage.getItem('role');
     const currentPage = getCurrentPage();
     
-    // Pages accessible by interns
-    const internPages = ['index.html', 'add.html', 'detail.html', 'profile.html', 'browse-jobs.html', ''];
-    
+    // Pages accessible by interns (students apply through Browse Jobs, not add.html)
+    const internPages = ['index.html', 'applications.html', 'detail.html', 'profile.html', 'browse-jobs.html', ''];
+
     // Pages accessible by recruiters
-    const recruiterPages = ['company.html', 'applicant.html'];
+    const recruiterPages = ['company.html', 'applicant.html', 'postJob.html', 'profile.html'];
     
     if (userRole === 'intern' && !internPages.includes(currentPage)) {
         window.location.href = 'index.html';
@@ -92,13 +92,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupDynamicSidebar() {
     const userRole = getUserRole();
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     navLinks.forEach(link => {
         const page = link.getAttribute('data-page');
-        
+
         // Hide pages based on role
         if (userRole === 'intern') {
-            if (page === 'company') {
+            // Hide company page and add application page for students
+            // Students should apply through Browse Jobs, not manually add applications
+            if (page === 'company' || page === 'add') {
                 link.style.display = 'none';
             }
         } else if (userRole === 'recruiter') {
@@ -107,7 +109,7 @@ function setupDynamicSidebar() {
             }
         }
     });
-    
+
     // Setup logout button
     setupLogout();
 }
@@ -115,7 +117,19 @@ function setupDynamicSidebar() {
 function displayUserRole() {
     const userName = getUserName();
     const userRole = getUserRole();
-    
+
+    // Update greeting based on user name
+    const userGreeting = document.getElementById('user-greeting');
+    if (userGreeting) {
+        userGreeting.textContent = `Hello, ${userName}!`;
+    }
+
+    // Update recruiter greeting
+    const recruiterGreeting = document.getElementById('recruiter-greeting');
+    if (recruiterGreeting) {
+        recruiterGreeting.textContent = `Welcome, ${userName}!`;
+    }
+
     // Find header and add user info
     const header = document.querySelector('.header-title');
     if (header) {
@@ -133,7 +147,7 @@ function displayUserRole() {
                 color: ${userRole === 'intern' ? '#2563EB' : '#F97316'};
                 margin-left: 12px;
             `;
-            badge.textContent = userRole === 'intern' ? '👨‍🎓 Intern' : '🏢 Recruiter';
+            badge.textContent = userRole === 'intern' ? 'Student' : 'Recruiter';
             header.appendChild(badge);
         }
     }
@@ -269,9 +283,29 @@ function handleLogout(e) {
 
 // ====== LOCALSTORAGE FUNCTIONS ======
 
-function getApplications() {
+// Get ALL applications (used by recruiters)
+function getAllApplications() {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
+}
+
+// Get applications for the current logged-in user (used by students)
+function getApplications() {
+    const allApplications = getAllApplications();
+    const userRole = getUserRole();
+
+    // Recruiters see ALL applications
+    if (userRole === 'recruiter') {
+        return allApplications;
+    }
+
+    // Students only see THEIR OWN applications
+    const userEmail = localStorage.getItem('userEmail');
+    if (!userEmail) {
+        return [];
+    }
+
+    return allApplications.filter(app => app.candidateEmail === userEmail);
 }
 
 function saveApplications(applications) {
@@ -285,16 +319,18 @@ function addApplication(application) {
     application.candidateEmail = user.email || 'intern@example.com';
     application.createdAt = new Date().toISOString();
     application.interviewDate = null; // Will be set when status changes to Interview
-    
-    const applications = getApplications();
+
+    // Get ALL applications to add to (not filtered)
+    const applications = getAllApplications();
     applications.push(application);
     saveApplications(applications);
-    
+
     return application;
 }
 
 function updateApplication(id, updatedData) {
-    const applications = getApplications();
+    // Update in ALL applications
+    const applications = getAllApplications();
     const index = applications.findIndex(app => app.id === id);
     if (index !== -1) {
         applications[index] = { ...applications[index], ...updatedData };
@@ -305,13 +341,15 @@ function updateApplication(id, updatedData) {
 }
 
 function deleteApplication(id) {
-    const applications = getApplications();
+    // Delete from ALL applications
+    const applications = getAllApplications();
     const filtered = applications.filter(app => app.id !== id);
     saveApplications(filtered);
 }
 
 function getApplicationById(id) {
-    const applications = getApplications();
+    // Search in ALL applications
+    const applications = getAllApplications();
     return applications.find(app => app.id === id);
 }
 
@@ -402,39 +440,59 @@ function updateDashboardStats() {
 function displayRecentApplications() {
     const applications = getApplications();
     const list = document.getElementById('applications-list');
-    
+
     if (!list) return;
-    
+
     if (applications.length === 0) {
         list.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">📂</div>
-                <h3>No applications yet</h3>
-                <p>Start by adding your first job application!</p>
-                <a href="add.html" class="btn btn-primary">Add Application</a>
+            <div class="text-center py-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No applications yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Browse available jobs and submit your first application</p>
+                <a href="browse-jobs.html" class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                    Browse Jobs
+                </a>
             </div>
         `;
         return;
     }
-    
+
     // Show recent 5 applications
     const recent = applications.slice(-5).reverse();
-    
-    list.innerHTML = recent.map(app => `
-        <a href="detail.html?id=${app.id}" class="app-card">
-            <div class="app-card-content">
-                <div class="app-header">
-                    <div class="app-title">${app.companyName}</div>
-                    <div class="app-role">${app.jobRole}</div>
+
+    const statusColors = {
+        'applied': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+        'interview': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+        'offer': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+        'rejected': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+    };
+
+    list.innerHTML = `<div class="space-y-3">` + recent.map(app => `
+        <a href="detail.html?id=${app.id}" class="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md hover:border-blue-500 dark:hover:border-blue-500 transition-all group">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">${app.companyName}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">${app.jobRole}</p>
+                    <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-500">
+                        <span class="flex items-center">
+                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            ${formatDate(app.applicationDate)}
+                        </span>
+                    </div>
                 </div>
-                <div class="app-meta">
-                    <span>📅 ${formatDate(app.applicationDate)}</span>
-                    <span>📍 ${app.status}</span>
-                </div>
+                <span class="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[app.status.toLowerCase()] || 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}">${app.status}</span>
             </div>
-            <span class="badge badge-${app.status.toLowerCase()}">${app.status}</span>
         </a>
-    `).join('');
+    `).join('') + `</div>`;
 }
 
 // ====== ADD APPLICATION PAGE ======
@@ -1363,10 +1421,14 @@ function displayRecentApplications() {
     if (applications.length === 0) {
         list.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">📂</div>
+                <div class="empty-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
                 <h3>No applications yet</h3>
-                <p>Start by adding your first job application!</p>
-                <a href="add.html" class="btn btn-primary">Add Application</a>
+                <p>Browse available jobs and submit your first application</p>
+                <a href="browse-jobs.html" class="btn btn-primary">Browse Jobs</a>
             </div>
         `;
         return;
