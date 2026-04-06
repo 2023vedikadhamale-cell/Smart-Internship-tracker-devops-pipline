@@ -1,2 +1,6 @@
 node_modules/ 
 nul 
+
+# Environment variables
+.env
+backend/.env
