@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
+
+// this is testing comment to check CI pipeline
 const Login = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
