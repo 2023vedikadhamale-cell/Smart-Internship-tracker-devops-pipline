@@ -129,9 +129,14 @@ router.put('/profile/:id/resume', (req, res) => {
   try {
     const userId = parseFloat(req.params.id);
     const { resume } = req.body;
+    const maxResumeSizeBytes = 5 * 1024 * 1024;
 
     if (!resume) {
       return res.status(400).json({ error: 'Resume is required' });
+    }
+
+    if (Buffer.byteLength(String(resume), 'utf8') > maxResumeSizeBytes) {
+      return res.status(400).json({ error: 'Resume size must be 5MB or less' });
     }
 
     const user = userModel.findUserById(userId);

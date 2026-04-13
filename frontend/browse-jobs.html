@@ -285,8 +285,8 @@
                                 </svg>
                             </div>
                             <div class="file-upload-title">Click to upload or drag and drop</div>
-                            <div class="file-upload-hint">PDF, DOC, DOCX (Max 5MB)</div>
-                            <input type="file" id="resume-file" accept=".pdf,.doc,.docx" onchange="handleResumeUpload(event)">
+                            <div class="file-upload-hint">PNG, JPG, PDF, DOC, DOCX (Max 5MB)</div>
+                            <input type="file" id="resume-file" accept=".png,.jpg,.doc,.docx,.pdf" onchange="handleResumeUpload(event)">
                         </div>
                         <div id="resume-preview" class="file-preview hidden">
                             <span class="file-preview-icon">
@@ -383,8 +383,8 @@
                             </svg>
                         </div>
                         <div class="file-upload-title">Click to upload resume</div>
-                        <div class="file-upload-hint">PDF, DOC, DOCX (Max 5MB)</div>
-                        <input type="file" id="analysis-resume-file" accept=".pdf,.doc,.docx" onchange="analyzeResume(event)">
+                        <div class="file-upload-hint">PNG, JPG, PDF, DOC, DOCX (Max 5MB)</div>
+                        <input type="file" id="analysis-resume-file" accept=".png,.jpg,.doc,.docx,.pdf" onchange="analyzeResume(event)">
                     </div>
                 </div>
 
@@ -542,12 +542,35 @@
             document.getElementById('resume-upload-area').classList.remove('hidden');
         }
 
+        function isValidResumeFile(file) {
+            const allowedExtensions = ['png', 'jpg', 'doc', 'docx', 'pdf'];
+            const maxSizeInBytes = 5 * 1024 * 1024;
+            const extension = file.name.split('.').pop()?.toLowerCase();
+
+            if (!extension || !allowedExtensions.includes(extension)) {
+                return {
+                    valid: false,
+                    message: 'Only PNG, JPG, DOC, DOCX, and PDF files are allowed.'
+                };
+            }
+
+            if (file.size > maxSizeInBytes) {
+                return {
+                    valid: false,
+                    message: 'File size must be 5MB or less.'
+                };
+            }
+
+            return { valid: true };
+        }
+
         function handleResumeUpload(event) {
             const file = event.target.files[0];
             if (file) {
-                // Validate file size (5MB max)
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('File size must be less than 5MB', 'error');
+                const validation = isValidResumeFile(file);
+                if (!validation.valid) {
+                    showToast(validation.message, 'error');
+                    event.target.value = '';
                     return;
                 }
 
@@ -569,6 +592,15 @@
 
         function submitApplication(event) {
             event.preventDefault();
+
+            const selectedResume = document.getElementById('resume-file').files[0];
+            if (selectedResume) {
+                const validation = isValidResumeFile(selectedResume);
+                if (!validation.valid) {
+                    showToast(validation.message, 'error');
+                    return;
+                }
+            }
 
             const coverLetter = document.getElementById('apply-cover-letter').value;
             if (coverLetter.length < 50) {
@@ -623,6 +655,13 @@
         function analyzeResume(event) {
             const file = event.target.files[0];
             if (!file) return;
+
+            const validation = isValidResumeFile(file);
+            if (!validation.valid) {
+                showToast(validation.message, 'error');
+                event.target.value = '';
+                return;
+            }
 
             // Show loading
             document.getElementById('resume-analysis-upload').classList.add('hidden');

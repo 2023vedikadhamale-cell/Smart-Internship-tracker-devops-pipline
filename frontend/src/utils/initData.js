@@ -13,7 +13,7 @@ export const initializeSampleData = () => {
       name: 'John Doe',
       email: 'candidate@example.com',
       password: 'password123',
-      role: 'candidate'
+      role: 'intern'
     },
     {
       id: '2',

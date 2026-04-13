@@ -8,6 +8,9 @@ export default defineConfig({
       include: /\.(jsx|tsx)$/,
     })
   ],
+  test: {
+    environment: 'jsdom'
+  },
   server: {
     port: 3000,
     open: true

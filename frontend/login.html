@@ -225,7 +225,7 @@
         <label>Select Your Role</label>
         <div class="role-selector">
           <div class="role-option">
-            <input type="radio" id="reg-role-intern" name="role" value="intern" checked>
+            <input type="radio" id="reg-role-intern" name="regRole" value="intern" checked>
             <label for="reg-role-intern" class="role-label">
               <div class="role-icon">👨‍🎓</div>
               <div class="role-name">Intern</div>
@@ -234,7 +234,7 @@
           </div>
 
           <div class="role-option">
-            <input type="radio" id="reg-role-recruiter" name="role" value="recruiter">
+            <input type="radio" id="reg-role-recruiter" name="regRole" value="recruiter">
             <label for="reg-role-recruiter" class="role-label">
               <div class="role-icon">🏢</div>
               <div class="role-name">Recruiter</div>
@@ -268,7 +268,7 @@
     </form>
 
     <div class="disclaimer">
-      <p>Demo Mode: Use any email and password to proceed</p>
+      <p>Use your registered email and password to proceed</p>
       <p style="margin-top: 16px; font-size: 13px;">
         <span id="login-link-text">Don't have an account? <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;" onclick="switchToRegister(event)">Create one here</a></span>
         <span id="register-link-text" style="display: none;">Already have an account? <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;" onclick="switchToLogin(event)">Login here</a></span>
@@ -294,8 +294,8 @@
       document.getElementById('registerForm').style.display = 'block';
       document.getElementById('login-link-text').style.display = 'none';
       document.getElementById('register-link-text').style.display = 'block';
-      document.querySelector('.login-header h1').textContent = 'Create Account';
-      document.querySelector('.login-header p').textContent = 'Join CareerTrack today';
+      document.querySelector('h1').textContent = 'Create Account';
+      document.querySelector('.subtitle').textContent = 'Join CareerTrack today';
     }
 
     // Switch to Login Form
@@ -305,37 +305,75 @@
       document.getElementById('registerForm').style.display = 'none';
       document.getElementById('login-link-text').style.display = 'block';
       document.getElementById('register-link-text').style.display = 'none';
-      document.querySelector('.login-header h1').textContent = 'CareerTrack';
-      document.querySelector('.login-header p').textContent = 'Smart Internship & Job Application Tracker';
+      document.querySelector('h1').textContent = '🎯 CareerTrack';
+      document.querySelector('.subtitle').textContent = 'Smart Internship & Job Application Tracker';
+    }
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function normalizeEmail(email) {
+      return String(email || '').trim().toLowerCase();
+    }
+
+    function normalizeRole(role) {
+      return role === 'candidate' ? 'intern' : (role || 'intern');
+    }
+
+    function findUserByEmailAndRole(email, role) {
+      const normalizedEmail = normalizeEmail(email);
+      const normalizedRole = normalizeRole(role);
+      const users = getUsers();
+
+      return users.find((u) => {
+        return normalizeEmail(u.email) === normalizedEmail && normalizeRole(u.role) === normalizedRole;
+      });
+    }
+
+    function saveSession(user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', normalizeRole(user.role));
+      localStorage.setItem('userEmail', normalizeEmail(user.email));
+      localStorage.setItem('userName', user.name || 'User');
+      localStorage.setItem('isLoggedIn', 'true');
     }
 
     // Handle login form submission
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const role = document.querySelector('input[name="role"]:checked').value;
-      const email = document.getElementById('email').value;
+      const role = document.querySelector('#loginForm input[name="role"]:checked').value;
+      const email = normalizeEmail(document.getElementById('email').value);
       const password = document.getElementById('password').value;
       
       if (!email || !password) {
         showError('Please fill in all fields');
         return;
       }
+
+      const user = findUserByEmailAndRole(email, role);
+      if (!user) {
+        showError('No account found. Please register first.');
+        return;
+      }
+
+      if (user.password !== password) {
+        showError('Incorrect password for this email.');
+        return;
+      }
       
-      // Store full user object in localStorage
-      const user = {
-        name: extractNameFromEmail(email),
-        email: email,
-        role: role
-      };
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('role', role);
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('userName', user.name);
-      localStorage.setItem('isLoggedIn', 'true');
+      saveSession({
+        ...user,
+        role: normalizeRole(user.role)
+      });
       
       // Redirect based on role
-      if (role === 'intern') {
+      if (normalizeRole(user.role) === 'intern') {
         window.location.href = 'index.html';
       } else {
         window.location.href = 'company.html';
@@ -346,9 +384,9 @@
     document.getElementById('registerForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const role = document.querySelector('input[name="role"]:checked').value;
+      const role = document.querySelector('#registerForm input[name="regRole"]:checked').value;
       const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
+      const email = normalizeEmail(document.getElementById('reg-email').value);
       const password = document.getElementById('reg-password').value;
       const confirmPassword = document.getElementById('reg-confirm-password').value;
       
@@ -366,18 +404,25 @@
         showError('❌ Password must be at least 6 characters');
         return;
       }
+
+      if (findUserByEmailAndRole(email, role)) {
+        showError('❌ Account already exists for this email and role. Please login.');
+        return;
+      }
       
-      // Store full user object in localStorage
+      const users = getUsers();
       const user = {
+        id: Date.now().toString(),
         name: name,
         email: email,
-        role: role
+        password: password,
+        role: role,
+        createdAt: new Date().toISOString()
       };
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('role', role);
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('userName', name);
-      localStorage.setItem('isLoggedIn', 'true');
+
+      users.push(user);
+      saveUsers(users);
+      saveSession(user);
       
       showError('✅ Account created successfully! Redirecting...');
       

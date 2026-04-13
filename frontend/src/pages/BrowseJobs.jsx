@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import AgentAnalyzer from '../components/AgentAnalyzer';
 
+const MAX_RESUME_SIZE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_RESUME_EXTENSIONS = ['png', 'jpg', 'doc', 'docx', 'pdf'];
+
 const BrowseJobs = () => {
   const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
@@ -182,10 +185,51 @@ Tech Stack:
     setIsDetailsModalOpen(true);
   };
 
+  const validateResumeFile = (file) => {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+
+    if (!extension || !ALLOWED_RESUME_EXTENSIONS.includes(extension)) {
+      return {
+        valid: false,
+        message: 'Only PNG, JPG, DOC, DOCX, and PDF files are allowed.'
+      };
+    }
+
+    if (file.size > MAX_RESUME_SIZE_BYTES) {
+      return {
+        valid: false,
+        message: 'File size must be 5MB or less.'
+      };
+    }
+
+    return { valid: true };
+  };
+
   const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      setApplicationForm({
+        ...applicationForm,
+        resume: null
+      });
+      return;
+    }
+
+    const validation = validateResumeFile(file);
+    if (!validation.valid) {
+      alert(validation.message);
+      e.target.value = '';
+      setApplicationForm({
+        ...applicationForm,
+        resume: null
+      });
+      return;
+    }
+
     setApplicationForm({
       ...applicationForm,
-      resume: e.target.files[0]
+      resume: file
     });
   };
 
@@ -194,6 +238,12 @@ Tech Stack:
 
     if (!applicationForm.resume) {
       alert('Please upload your resume');
+      return;
+    }
+
+    const validation = validateResumeFile(applicationForm.resume);
+    if (!validation.valid) {
+      alert(validation.message);
       return;
     }
 
@@ -416,13 +466,13 @@ Tech Stack:
                 </label>
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx"
+                  accept=".png,.jpg,.doc,.docx,.pdf"
                   onChange={handleFileChange}
                   required
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Accepted formats: PDF, DOC, DOCX
+                  Accepted formats: PNG, JPG, PDF, DOC, DOCX (Max 5MB)
                 </p>
               </div>
 

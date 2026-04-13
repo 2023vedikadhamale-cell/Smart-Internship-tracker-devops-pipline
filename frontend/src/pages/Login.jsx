@@ -22,35 +22,58 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
-    // Get users from localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    let user = users.find(
-      u => u.email === formData.email && u.password === formData.password && u.role === formData.role
-    );
+    const normalizedEmail = formData.email.trim().toLowerCase();
+    const normalizedRole = formData.role;
 
-    // If user doesn't exist, create a new one automatically
-    if (!user) {
-      // Extract name from email (before @ symbol)
-      const name = formData.email.split('@')[0].replace(/[^a-zA-Z\s]/g, ' ').trim();
-      const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-
-      const newUser = {
-        id: Date.now().toString(),
-        name: capitalizedName,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-        createdAt: new Date().toISOString()
-      };
-
-      // Add to users array and save to localStorage
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
-      user = newUser;
+    if (!normalizedEmail || !formData.password) {
+      setError('Please enter both email and password.');
+      return;
     }
 
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const existingUser = users.find((u) => {
+      const userEmail = String(u.email || '').trim().toLowerCase();
+      const userRole = u.role === 'candidate' ? 'intern' : (u.role || 'intern');
+      return userEmail === normalizedEmail && userRole === normalizedRole;
+    });
+
+    // Existing account must provide the same password used earlier.
+    if (existingUser) {
+      if (existingUser.password !== formData.password) {
+        setError('Incorrect password for this email. Please try again.');
+        return;
+      }
+
+      const userForSession = {
+        ...existingUser,
+        email: normalizedEmail,
+        role: existingUser.role === 'candidate' ? 'intern' : (existingUser.role || 'intern')
+      };
+
+      login(userForSession);
+      navigate('/');
+      return;
+    }
+
+    // First login for a new email+role creates the account.
+    const name = normalizedEmail.split('@')[0].replace(/[^a-zA-Z\s]/g, ' ').trim();
+    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+
+    const newUser = {
+      id: Date.now().toString(),
+      name: capitalizedName || 'User',
+      email: normalizedEmail,
+      password: formData.password,
+      role: normalizedRole,
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+
     // Login the user
-    login(user);
+    login(newUser);
     navigate('/');
   };
 
